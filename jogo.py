@@ -79,8 +79,9 @@ class Jogo(Tk):
             print("data")
         else:
             player = Player("joao", 1, 0, 1)
-            self.fase = Fase(player, [1,2,3])
+            self.fase = Fase(player)
             mapa = self.fase.ler_mapa("mapa1")
+            
 
         self.configurar_partida(player, self.fase)
         self.render(mapa)
@@ -98,6 +99,7 @@ class Jogo(Tk):
         posGhfX = self.fase.player.posx*31
         posGhfY = self.fase.player.posy*31
         self.sprites.player.place(x=posGhfX, y=posGhfY)
+        self.criar_enemigos(self.fase.ler_enemigos("mapa1"))
  
 
     def configurar_partida(self, player, f1):
@@ -118,6 +120,18 @@ class Jogo(Tk):
     
     def abrir_porta(self):
         self.sprites.porta['image'] = self.sprites.img_chao
+
+    def criar_enemigos(self, *enemigos):
+        enemigos = enemigos[0]
+        self.enemigos4 = []
+        objts = {}
+        for enemigo in enemigos:
+            enemigoGUI = self.sprites.criar_enemigo(self.mapa)
+            enemigoGUI.place(x=enemigo.posx, y=enemigo.posy)
+            objts['logico'] =  enemigo
+            objts['grafico'] =  enemigoGUI
+            self.enemigos4.append(objts)
+
 
     def render(self, mapa):
         posx = 0

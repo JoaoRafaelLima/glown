@@ -19,7 +19,7 @@ class Sprites(object):
         self.player = Label(master, image=self.img_player, bd=0)
 
     def criar_enemigo(self, master):
-        self.enemigo = Label(master, image=self.img_enemigo, bd=0)
+        return Label(master, image=self.img_enemigo, bd=0)
 
     def criar_item(self, master, x, y):
         self.item = Label(master, image=self.img_item, bd=0)

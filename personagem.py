@@ -1,7 +1,7 @@
+from abc import ABC, abstractclassmethod
 
 
-
-class Personagem(object):
+class Personagem(ABC):
 
     def __init__(self, posx, posy, velocidade):
         self.posx = posx
