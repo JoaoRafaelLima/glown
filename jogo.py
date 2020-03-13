@@ -92,15 +92,16 @@ class Jogo(Tk):
         key = str(event.char)
         eventos.colide_mapa(self.fase.player, key, self.fase.mapa)
         eventos.coletarItem(self, self.fase.player, self.fase)
-        self.posi_obj_dinamicos()
+        self.atualizar_player()
 
     def posi_obj_dinamicos(self):
-        
+        self.atualizar_player()
+        self.criar_enemigos(self.fase.ler_enemigos("mapa1"))
+
+    def atualizar_player(self):
         posGhfX = self.fase.player.posx*31
         posGhfY = self.fase.player.posy*31
         self.sprites.player.place(x=posGhfX, y=posGhfY)
-        self.criar_enemigos(self.fase.ler_enemigos("mapa1"))
- 
 
     def configurar_partida(self, player, f1):
         self.menu.place_forget()
@@ -130,8 +131,9 @@ class Jogo(Tk):
             enemigoGUI.place(x=enemigo.posx, y=enemigo.posy)
             objts['logico'] =  enemigo
             objts['grafico'] =  enemigoGUI
-            self.enemigos4.append(objts)
-
+            self.enemigos4.append(objts.copy())
+            objts.clear()
+        self.fase.mover_enemigos(self.enemigos4)
 
     def render(self, mapa):
         posx = 0

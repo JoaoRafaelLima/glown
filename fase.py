@@ -1,5 +1,7 @@
 from enemigo import Enemigo
-
+from time import sleep
+from random import choice
+import threading
 
 
 class Fase(object):
@@ -9,7 +11,7 @@ class Fase(object):
         self.porta = []
         self.itens = []
         self.player = player
-     
+        self.parar_loop = False
         self.enemigos = []
         self.mapa = []
 
@@ -67,3 +69,59 @@ class Fase(object):
 
     def pos_objts_nao_staticos(self):
         pass
+
+    def mover_enemigos(self,  *args):
+        
+        for dic in args[0]:
+            thd = threading.Thread(target=self.loop_enemigos, kwargs=(dic))
+            thd.start()
+            print("-----------")
+            print(dic)
+            print("-----------")
+            
+    def loop_enemigos(self, **kwargs):
+        
+        print(kwargs)
+        enemigo = kwargs['logico']
+        label_enemigo = kwargs['grafico']
+        #obj1 instancia de enemigo
+        #obj2 instancia de Label
+        enemigo.posx = int(enemigo.posx)
+        enemigo.posy = int(enemigo.posy)
+
+        posx_inicial = enemigo.posx
+        posx_final = enemigo.posx+(2*enemigo.velocidade)
+
+        posy_inicial = enemigo.posy
+        posy_final = enemigo.posy+(2*enemigo.velocidade)
+
+        if enemigo.eixo_movimento == "y":
+            while not self.parar_loop:
+                sleep(choice(enemigo.times))
+                if enemigo.incrementa_eixo == True:
+                    enemigo.posy+=enemigo.velocidade
+
+                    if enemigo.posy == posy_final:
+                        enemigo.incrementa_eixo = False
+                else:
+                    enemigo.posy-=enemigo.velocidade
+
+                    if enemigo.posy == posy_inicial:
+                        enemigo.incrementa_eixo = True
+                label_enemigo.place(x=enemigo.posx, y=enemigo.posy)
+
+        elif enemigo.eixo_movimento == "x":
+            while not self.parar_loop:
+                sleep(choice(enemigo.times))
+                if enemigo.incrementa_eixo == True:
+                    enemigo.posx+=enemigo.velocidade
+
+                    if enemigo.posx == posx_final:
+                        enemigo.incrementa_eixo = False
+                else:
+                    enemigo.posx-=enemigo.velocidade
+
+                    if enemigo.posx == posx_inicial:
+                        enemigo.incrementa_eixo = True
+                label_enemigo.place(x=enemigo.posx, y=enemigo.posy)
+    
