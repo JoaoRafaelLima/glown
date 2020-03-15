@@ -6,6 +6,7 @@ from fase import Fase
 from player import Player
 import execoes
 import eventos
+from menu import Menu
 
 
 
@@ -44,7 +45,7 @@ class Jogo(Tk):
         self.player_itens.place(x=210, y=0)
 
         #binds
-        self.menu.bind('<Return>', self.start)
+        self.menu.bind('<Return>', self.iniciar_menu)
         self.menu.focus_force()
         self.mapa.bind('<Key>', self.ler_teclado)
         self.mapa.bind('<Escape>', self.ativar_poUp)
@@ -72,15 +73,16 @@ class Jogo(Tk):
             finally:
                 save.close()
 
-    
-    def start(self, fase):
-        data = self.carregar_jogo()
-        if data:
-            print("data")
-        else:
-            player = Player("joao", 1, 0, 1)
-            self.fase = Fase(player)
-            mapa = self.fase.ler_mapa("mapa1")
+    def iniciar_menu(self, event):
+        self.menu.place_forget()
+        self.menu_ops = Menu(self)
+        self.menu_ops.place(x=0, y=0)
+        
+    def novo_jogo(self):
+        self.menu_ops.place_forget()
+        player = Player("joao", 1, 0, 1)
+        self.fase = Fase(player)
+        mapa = self.fase.ler_mapa("mapa1")
             
 
         self.configurar_partida(player, self.fase)
@@ -162,5 +164,8 @@ class Jogo(Tk):
                 posx+=31
             posy+=31
             posx = 0
+
+    def sair(self):
+        self.quit()
 
 Jogo()
