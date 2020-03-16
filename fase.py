@@ -1,16 +1,22 @@
 from enemigo import Enemigo
+from player import Player
 from time import sleep
 from random import choice
 import threading
+import eventos
 
 
 class Fase(object):
 
-    def __init__(self, player):
-        
+    def __init__(self, fase, master):
+        self.master = master
+        self.fase = fase
         self.porta = []
+        self.portal = []
         self.itens = []
-        self.player = player
+        self.labels = []
+        self.threads = 0
+        self.ler_player()
         self.parar_loop = False
         self.enemigos = []
         self.mapa = []
@@ -18,8 +24,8 @@ class Fase(object):
     def getItem(self, item):
         self.itens.append(item.copy())
 
-    def ler_mapa(self, mapa):
-        path = "mapas/"+mapa+".txt"
+    def ler_mapa(self):
+        path = "fases/"+self.fase+"/mapa.txt"
         mapa_matrix = []
         tmp = []
         with open(path,'r') as text:
@@ -35,6 +41,10 @@ class Fase(object):
                     elif valor_int == 3:
                         self.porta.append(cont)
                         self.porta.append(cont2)
+                    
+                    elif valor_int == 4:
+                        self.portal.append(cont)
+                        self.portal.append(cont2)
 
                 mapa_matrix.append(tmp.copy())
                 tmp.clear()
@@ -42,9 +52,43 @@ class Fase(object):
             text.close()
         self.mapa = mapa_matrix
         return mapa_matrix
+    
+    def parar(self):
+        self.parar_loop = True
+        print(self.threads)
+        thread = threading.Thread(target=self.teste, args=()).start()
+    
+    def teste(self):
+        while True:
+            if self.threads == 0:
+                break
+            print(self.threads)
+        print("acabou")
+        self.apagar_labels()
+        self.master.limpar_mapa()
+        
+    def apagar_labels(self):
+        for label in self.labels:
+            label.destroy()
+        self.labels.clear()
+        print(self.labels)
+        
 
-    def ler_enemigos(self, mapa):
-        arquivo = "mapas/"+mapa+"_ents.txt"
+    def ler_player(self):
+        arquivo = "fases/"+self.fase+"/player.txt"
+        with open(arquivo, 'r') as arq:
+            player = arq.readlines()
+            info = player[0].split(';')
+            info[1] = int(info[1])
+            info[2] = int(info[2])
+            info[3] = int(info[3])
+            return self.criar_player(info)
+
+    def criar_player(self, dados):
+        self.player = Player(dados[0], dados[1], dados[2], dados[3])
+
+    def ler_enemigos(self):
+        arquivo = "fases/"+self.fase+"/enemigos.txt"
 
         with open(arquivo, 'r') as arq:
             enemigos = arq.readlines()
@@ -59,7 +103,7 @@ class Fase(object):
         enemigos = enemigos[0]
         for enemigo in enemigos:
             attrs = enemigo.split(',')
-            generico = Enemigo(attrs[0], attrs[1], attrs[2], 31)
+            generico = Enemigo(attrs[0], attrs[1], attrs[2], 1)
 
             self.enemigos.append(generico)
         return self.enemigos
@@ -73,15 +117,16 @@ class Fase(object):
     def mover_enemigos(self,  *args):
         
         for dic in args[0]:
+            self.labels.append(dic['grafico'])
             thd = threading.Thread(target=self.loop_enemigos, kwargs=(dic))
             thd.start()
-            print("-----------")
-            print(dic)
-            print("-----------")
+            
+            self.threads+=1
+        print(f"quantidade de threads: {self.threads}")
             
     def loop_enemigos(self, **kwargs):
         
-        print(kwargs)
+        
         enemigo = kwargs['logico']
         label_enemigo = kwargs['grafico']
         #obj1 instancia de enemigo
@@ -108,7 +153,11 @@ class Fase(object):
 
                     if enemigo.posy == posy_inicial:
                         enemigo.incrementa_eixo = True
-                label_enemigo.place(x=enemigo.posx, y=enemigo.posy)
+
+                eventos.colidir(self.master, self.player, enemigo)
+                posx = enemigo.posx*31
+                posy = enemigo.posy*31
+                label_enemigo.place(x=posx, y=posy)
 
         elif enemigo.eixo_movimento == "x":
             while not self.parar_loop:
@@ -123,5 +172,17 @@ class Fase(object):
 
                     if enemigo.posx == posx_inicial:
                         enemigo.incrementa_eixo = True
-                label_enemigo.place(x=enemigo.posx, y=enemigo.posy)
+                eventos.colidir(self.master, self.player, enemigo)
+                posx = enemigo.posx*31
+                posy = enemigo.posy*31
+                label_enemigo.place(x=posx, y=posy)
+        self.threads-=1
+        print(self.threads)
+        
+    def clear(self):
+        self.porta.clear()
+        self.itens.clear()
+        self.enemigos.clear()
+        self.mapa.clear()
+        
     

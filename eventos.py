@@ -5,13 +5,35 @@ def verificar_missao(master, obj, fase):
         fase.abrir_porta()
         master.abrir_porta()
 
+def colidir(master, player, enemigo):
+    if player.vidas > 0:
+        if enemigo.posx == player.posx and enemigo.posy == player.posy:
+            player.vidas-=1
+            master.atualizar_status_bar(player)
+    else:
+        master.fase.parar_loop = True
+        master.status = "perdeu"
+        master.ativar_poUp("event")
+        
+def verificar(master, obj, fase):
+    if obj.vidas == 0:
+        print("voce perdeu")
+        master.status = "perdeu"
+        master.ativar_popUp("event")
+
+    elif len(obj.itens) == len(fase.itens) and obj.posy == fase.portal[0] and obj.posx == fase.portal[1]:
+        print("no portal")
+        master.ganhou()
+    else:
+        master.label_player['image'] = master.sprites.img_player
+
 def coletarItem(master, obj, fase):
     for indice, item in enumerate(fase.itens):
         if  obj.posy == item[0] and obj.posx == item[1]:
             if not item in obj.itens:
                 obj.getIten(item)
                 print("coletou")
-                master.atualizar_status_bar(obj, fase)
+                master.atualizar_status_bar(obj)
                 master.retirar_item(indice)
     verificar_missao(master, obj, fase)
 

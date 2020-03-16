@@ -10,7 +10,7 @@ class Menu(Canvas):
         self['height'] = 527
         self['highlightthickness'] = 0
         self['bg'] = '#000612'
-        self.fonte = ('Arial bold', 20)
+        self.fonte = ('Fixedsys', 20)
         self.posicao_cursor = 180
         self.focus_force()
         self.bind('<Key>', self.mover_cursor)
@@ -27,10 +27,10 @@ class Menu(Canvas):
     
     def criar_borda(self):
         self.borda = self.create_polygon(
-            245,180, 
-            255, 190,
-            265, 180,
-            width=3, fill="#773300"
+            245,184, 
+            255, 174,
+            265, 184,
+            width=3, fill="#677821"
         )
     
     def mover_cursor(self, ev):
