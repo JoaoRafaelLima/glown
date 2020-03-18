@@ -1,5 +1,5 @@
 from tkinter import Frame, Label, CENTER, Button
-from consts import *
+from config import *
 
 class popUp(Frame):
     ativo = False
@@ -45,6 +45,15 @@ class popUp(Frame):
                 self.botao_op['command'] = self.reiniciar_jogo
                 self.botao_op2['text'] = "Sair"
                 self.botao_op2['command'] = self.sair
+            
+            elif self.status == "zerou":
+                self.menssagem['text'] = "Jogo terminado"
+                self.botao_op['text'] = "Restart"
+                self.botao_op['width'] = 12
+                self.botao_op['command'] = self.reiniciar_jogo
+                self.botao_op2['text'] = "Sair"
+                self.botao_op2['command'] = self.sair
+            
 
             self.place(x=100, y=120 )
             self.menssagem.place(x=50, y=30)

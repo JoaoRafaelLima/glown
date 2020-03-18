@@ -7,6 +7,7 @@ from player import Player
 import execoes
 import eventos
 from menu import Menu
+from menuPartida import MenuPartida
 
 
 
@@ -54,11 +55,14 @@ class Jogo(Tk):
         self.menu.bind('<Return>', self.iniciar_menu)
         self.menu.focus_force()
         self.mapa.bind('<Key>', self.ler_teclado)
-        self.mapa.bind('<Escape>', self.ativar_poUp)
+        self.mapa.bind('<Escape>', self.menu_partida)
         
         self.mainloop()
-    
-    def ativar_poUp(self, ev):
+    def menu_partida(self, event):
+        menu = MenuPartida(self)
+        menu.exibir(100, 80)
+
+    def ativar_popUp(self, ev):
         pop_up = popUp.popUp(self, self.status)
         pop_up.exibir()
 
@@ -96,14 +100,17 @@ class Jogo(Tk):
         self.menu_ops.place(x=0, y=0)
         
     def novo_jogo(self):
-        self.status = "jogando"
-        self.menu_ops.place_forget()
-        self.fase = Fase(self.mapas[self.mapa_atual], self)
-        self.configurar_partida()
+        if self.mapa_atual+1 > len(self.mapas):
+            print("Nao a proxima fase")
+        else:
+            self.status = "jogando"
+            self.menu_ops.place_forget()
+            self.fase = Fase(self.mapas[self.mapa_atual], self)
+            self.configurar_partida()
 
-        self.render(self.fase.mapa)
-        self.label_player = self.sprites.criar_player(self.mapa)
-        self.posi_obj_dinamicos()
+            self.render(self.fase.mapa)
+            self.label_player = self.sprites.criar_player(self.mapa)
+            self.posi_obj_dinamicos()
 
     def ler_teclado(self, event):
         key = str(event.char)
@@ -144,7 +151,7 @@ class Jogo(Tk):
         self.status = "ganhou"
         self.label_player['image'] = self.sprites.img_player_portal
         self.fase.parar_loop = True
-        self.ativar_poUp("event")
+        self.ativar_popUp("event")
 
     def criar_enemigos(self, *enemigos):
         print("criando objetos")

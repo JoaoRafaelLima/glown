@@ -1,4 +1,4 @@
-
+from config import *
 
 def verificar_missao(master, player, fase):
     if  len(player.itens) == len(fase.itens):
@@ -28,7 +28,6 @@ def verificar(master, obj, fase):
         master.label_player['image'] = master.sprites.img_player
 
 def coletarItem(master, obj, fase):
-    print("aaa")
     for indice, item in enumerate(fase.itens):
         if  obj.posy == item[0] and obj.posx == item[1]:
             if not item in obj.itens:
@@ -42,7 +41,7 @@ def coletarItem(master, obj, fase):
 def colide_mapa(obj, key, cenario):
    
     if key == "w":
-        if obj.posy > 0:
+        if obj.posy > HEIGHT_I:
             if not cenario[obj.posy-1][obj.posx] == 1 and not cenario[obj.posy-1][obj.posx] == 3:
                 obj.mover(key)
             else:
@@ -51,7 +50,7 @@ def colide_mapa(obj, key, cenario):
             print("distancia maxima")
                      
     elif key == "s":
-        if obj.posy < 15:
+        if obj.posy < HEIGHT_F:
             if not cenario[obj.posy+1][obj.posx] == 1 and not cenario[obj.posy+1][obj.posx] == 3:
                 obj.mover(key)
             else:
@@ -60,7 +59,7 @@ def colide_mapa(obj, key, cenario):
             print("distancia maxima")
                 
     elif key == "a":
-        if obj.posx > 0:
+        if obj.posx > WIDTH_I:
             if not cenario[obj.posy][obj.posx-1] == 1 and not cenario[obj.posy][obj.posx-1] == 3:
                 obj.mover(key)
             else:
@@ -70,7 +69,7 @@ def colide_mapa(obj, key, cenario):
                 
     elif key == "d":
        
-        if obj.posx < 15:
+        if obj.posx < WIDTH_F:
             if not cenario[obj.posy][obj.posx+1] == 1 and not cenario[obj.posy][obj.posx+1] == 3:
                 obj.mover(key)
             else:
