@@ -8,6 +8,7 @@ import execoes
 import eventos
 from menu import Menu
 from menuPartida import MenuPartida
+from config import CORES
 
 
 
@@ -20,7 +21,7 @@ class Jogo(Tk):
         self.label_itens = []
         self.labels = []
         self.porta = []
-        self.mapa_atual = 0
+        self.mapa_atual = 1
         self.status = "jogando"
         #fonte
         self.fonte = ('Fixedsys', 14)
@@ -102,6 +103,11 @@ class Jogo(Tk):
     def novo_jogo(self):
         if self.mapa_atual+1 > len(self.mapas):
             print("Nao a proxima fase")
+            self.statusBar.place_forget()
+            self.mapa.place_forget()
+            self['bg'] = CORES['bg']
+            self.status = "zerou"
+            self.ativar_popUp(1)
         else:
             self.status = "jogando"
             self.menu_ops.place_forget()

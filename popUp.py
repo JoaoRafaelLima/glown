@@ -23,6 +23,8 @@ class popUp(Frame):
         self.botao_op2 = Button(self, relief="groove", width=10,  font=FONTS['texto'], activebackground="#000612", bg="#000612", activeforeground="white", fg="white")
     
     def exibir(self):
+       
+        if_button2 = True
         if not popUp.ativo:
             if self.status == "jogando":
                 self.menssagem['text'] = "Sair do jogo?"
@@ -48,20 +50,24 @@ class popUp(Frame):
             
             elif self.status == "zerou":
                 self.menssagem['text'] = "Jogo terminado"
-                self.botao_op['text'] = "Restart"
+                self.botao_op['text'] = "Sair"
                 self.botao_op['width'] = 12
-                self.botao_op['command'] = self.reiniciar_jogo
-                self.botao_op2['text'] = "Sair"
-                self.botao_op2['command'] = self.sair
+                self.botao_op['command'] = self.voltar_menu
+                if_button2 = False
+               
             
 
             self.place(x=100, y=120 )
             self.menssagem.place(x=50, y=30)
             self.botao_op.place(x=30,y=100)
-            self.botao_op2.place(x=170,y=100 )
+            if if_button2:
+                self.botao_op2.place(x=170,y=100 )
             popUp.ativo = True
         else:
-            print("ja tem um popUp fixado!!!")   
+            print("ja tem um popUp fixado!!!") 
+    def voltar_menu(self):
+        self.master.iniciar_menu(1)
+
     def sair(self):
         self.place_forget()
         self.master.sair_partida()
