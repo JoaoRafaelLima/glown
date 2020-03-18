@@ -7,7 +7,7 @@ class Player(Personagem):
 
     def __init__(self, nome: str, velocidade: int, posy: int, posx: int):
         super().__init__(velocidade, posy, posx)
-        self.vidas = 3
+        self.vidas = 300
         self.itens = []
         self.nome = nome
      

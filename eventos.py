@@ -1,7 +1,7 @@
 
 
-def verificar_missao(master, obj, fase):
-    if  len(obj.itens) == len(fase.itens):
+def verificar_missao(master, player, fase):
+    if  len(player.itens) == len(fase.itens):
         fase.abrir_porta()
         master.abrir_porta()
 
@@ -28,6 +28,7 @@ def verificar(master, obj, fase):
         master.label_player['image'] = master.sprites.img_player
 
 def coletarItem(master, obj, fase):
+    print("aaa")
     for indice, item in enumerate(fase.itens):
         if  obj.posy == item[0] and obj.posx == item[1]:
             if not item in obj.itens:

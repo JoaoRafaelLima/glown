@@ -99,10 +99,9 @@ class Jogo(Tk):
         self.status = "jogando"
         self.menu_ops.place_forget()
         self.fase = Fase(self.mapas[self.mapa_atual], self)
-        mapa = self.fase.ler_mapa()
         self.configurar_partida()
 
-        self.render(mapa)
+        self.render(self.fase.mapa)
         self.label_player = self.sprites.criar_player(self.mapa)
         self.posi_obj_dinamicos()
 
@@ -115,7 +114,7 @@ class Jogo(Tk):
    
     def posi_obj_dinamicos(self):
         self.atualizar_player()
-        self.criar_enemigos(self.fase.ler_enemigos())
+        self.criar_enemigos(self.fase.enemigos)
 
     def atualizar_player(self):
         posGhfX = self.fase.player.posx*31
@@ -148,10 +147,12 @@ class Jogo(Tk):
         self.ativar_poUp("event")
 
     def criar_enemigos(self, *enemigos):
-        enemigos = enemigos[0]
+        print("criando objetos")
+      
         self.enemigos4 = []
         objts = {}
-        for enemigo in enemigos:
+        for enemigo in enemigos[0]:
+            
             enemigoGUI = self.sprites.criar_enemigo(self.mapa)
             posx = enemigo.posx*31
             posy = enemigo.posy*31
@@ -169,10 +170,11 @@ class Jogo(Tk):
         for label in self.labels:
             label.destroy()
         self.label_itens.clear()
-        print(self.label_itens)
+      
         if self.status == "jogando" or self.status == "perdeu":
             self.menu_ops.place(x=0, y=0)
             self.menu_ops.focus_force()
+
         elif self.status == "ganhou":
             self.novo_jogo()
 

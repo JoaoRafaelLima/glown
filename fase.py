@@ -4,6 +4,7 @@ from time import sleep
 from random import choice
 import threading
 import eventos
+import json
 
 
 class Fase(object):
@@ -11,47 +12,36 @@ class Fase(object):
     def __init__(self, fase, master):
         self.master = master
         self.fase = fase
+        self.mapa = []
+        self.enemigos = []
+        self.carregar_fase()
         self.porta = []
         self.portal = []
         self.itens = []
         self.labels = []
         self.threads = 0
-        self.ler_player()
         self.parar_loop = False
-        self.enemigos = []
-        self.mapa = []
+        self.pegar_objs_sp()
 
     def getItem(self, item):
         self.itens.append(item.copy())
+        print(f"Itens: {self.itens}")
 
-    def ler_mapa(self):
-        path = "fases/"+self.fase+"/mapa.txt"
-        mapa_matrix = []
-        tmp = []
-        with open(path,'r') as text:
-            mapa_str = text.readlines()
-            for cont, linha in enumerate(mapa_str):
-                linha = linha.rstrip()
-                for cont2, coluna in enumerate(linha):
-                    valor_int = int(coluna)
-                    tmp.append(valor_int)
-                    if valor_int == 2:
-                        self.getItem([cont, cont2])
+    def pegar_objs_sp(self):
+        for cont, linha in enumerate(self.mapa):
+            for cont2, coluna in enumerate(linha):
+                if coluna == 2:
+                    self.getItem([cont, cont2])
 
-                    elif valor_int == 3:
-                        self.porta.append(cont)
-                        self.porta.append(cont2)
-                    
-                    elif valor_int == 4:
-                        self.portal.append(cont)
-                        self.portal.append(cont2)
+                elif coluna == 3:
+                    self.porta.append(cont)
+                    self.porta.append(cont2)
+                
+                elif coluna == 4:
+                    self.portal.append(cont)
+                    self.portal.append(cont2)
 
-                mapa_matrix.append(tmp.copy())
-                tmp.clear()
 
-            text.close()
-        self.mapa = mapa_matrix
-        return mapa_matrix
     
     def parar(self):
         self.parar_loop = True
@@ -74,37 +64,12 @@ class Fase(object):
         print(self.labels)
         
 
-    def ler_player(self):
-        arquivo = "fases/"+self.fase+"/player.txt"
-        with open(arquivo, 'r') as arq:
-            player = arq.readlines()
-            info = player[0].split(';')
-            info[1] = int(info[1])
-            info[2] = int(info[2])
-            info[3] = int(info[3])
-            return self.criar_player(info)
-
-    def criar_player(self, dados):
-        self.player = Player(dados[0], dados[1], dados[2], dados[3])
-
-    def ler_enemigos(self):
-        arquivo = "fases/"+self.fase+"/enemigos.txt"
-
-        with open(arquivo, 'r') as arq:
-            enemigos = arq.readlines()
-            for cont in range(0, len(enemigos)):
-                enemigos[cont] = enemigos[cont].rstrip()
-                print(enemigos[cont])
-
-        return self.criar_enemigos(enemigos)
+    def criar_player(self, dados: dict):
+        self.player = Player(dados["nome"], dados["velocidade"], dados["posy"], dados["posx"])
 
     def criar_enemigos(self, *enemigos):
-      
-        enemigos = enemigos[0]
-        for enemigo in enemigos:
-            attrs = enemigo.split(',')
-            generico = Enemigo(attrs[0], attrs[1], attrs[2], 1)
-
+        for enemigo in enemigos[0]:
+            generico = Enemigo(enemigo[0], enemigo[1], enemigo[2], 1)
             self.enemigos.append(generico)
         return self.enemigos
 
@@ -184,5 +149,17 @@ class Fase(object):
         self.itens.clear()
         self.enemigos.clear()
         self.mapa.clear()
-        
-    
+
+    def carregar_fase(self):
+        fase = "fases/"+self.fase+".json"
+        try:
+            with open(fase, 'r') as arq:
+                dados = json.load(arq)
+                arq.close()
+            
+            self.criar_player(dados['player'])
+            self.criar_enemigos(dados['enemigos'])
+            self.mapa = dados['mapa']
+            
+        except FileNotFoundError:
+            print("Caminho nao encontrado")

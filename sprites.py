@@ -5,13 +5,13 @@ class Sprites(object):
 
     def __init__(self):
         #imagens
-        self.img_player = PhotoImage(file="imgs/player.png")
-        self.img_enemigo = PhotoImage(file="imgs/enemigo.png")
-        self.img_item = PhotoImage(file="imgs/item.png")
-        self.img_portal = PhotoImage(file="imgs/portal.png")
-        self.img_player_portal = PhotoImage(file="imgs/player_in_port.png")
-        self.img_parede = PhotoImage(file="imgs/parede.png")
-        self.img_porta = PhotoImage(file="imgs/porta.png")
+        self.img_player = PhotoImage(file="imgs/player_f.png")
+        self.img_enemigo = PhotoImage(file="imgs/enemigo_f.png")
+        self.img_item = PhotoImage(file="imgs/item_f.png")
+        self.img_portal = PhotoImage(file="imgs/portal_f.png")
+        self.img_player_portal = PhotoImage(file="imgs/player_in_port_f.png")
+        self.img_parede = PhotoImage(file="imgs/parede_f.png")
+        self.img_porta = PhotoImage(file="imgs/parede2_f.png")
         self.img_chao = PhotoImage(file="imgs/chao.png")
         self.img_menu = PhotoImage(file="imgs/menu2.png")
 
