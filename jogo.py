@@ -17,11 +17,11 @@ class Jogo(Tk):
     def __init__(self):
         super().__init__()
         #variaveis 
-        self.mapas = ['fase1', 'fase2']
+        self.mapas = ['fase1', 'fase2', 'fase3']
         self.label_itens = []
         self.labels = []
         self.porta = []
-        self.mapa_atual = 1
+        self.mapa_atual = 0
         self.status = "jogando"
         #fonte
         self.fonte = ('Fixedsys', 14)
@@ -73,15 +73,16 @@ class Jogo(Tk):
         
 
     def carregar_jogo(self):
-        with open('saves/save.json', 'r') as save:
+        with open('save/save.json', 'r') as save:
             try:
-                save_data = json.load(save)
-                if len(save_data) == 0:
+                data = json.load(save)
+                if len(data) == 0:
                     raise execoes.SaveVazio
                 else:
-                    player = save_data['player']
-                    fase = save_data['fase']
-                    return (player, fase)
+                    print(data)
+                    self.mapa_atual = data['fase_atual']
+                    self.novo_jogo(data=data)
+                
                 
             except execoes.SaveVazio as error:
                 print(f"Erro: {error}")
@@ -90,6 +91,9 @@ class Jogo(Tk):
                 save.close()
 
     def sair_partida(self):
+        if self.status == "jogando" or self.status == "perdeu":
+            print("fase inicial zero")
+            self.mapa_atual = 0
         self.fase.parar()
         self.fase.clear()
         print(f" threads: {self.fase.threads}")
@@ -100,7 +104,7 @@ class Jogo(Tk):
         self.menu_ops = Menu(self)
         self.menu_ops.place(x=0, y=0)
         
-    def novo_jogo(self):
+    def novo_jogo(self, data=None):
         if self.mapa_atual+1 > len(self.mapas):
             print("Nao a proxima fase")
             self.statusBar.place_forget()
@@ -111,10 +115,11 @@ class Jogo(Tk):
         else:
             self.status = "jogando"
             self.menu_ops.place_forget()
-            self.fase = Fase(self.mapas[self.mapa_atual], self)
+            self.fase = Fase(self.mapas[self.mapa_atual], self, data)
             self.configurar_partida()
 
             self.render(self.fase.mapa)
+            self.fase.getItens()
             self.label_player = self.sprites.criar_player(self.mapa)
             self.posi_obj_dinamicos()
 

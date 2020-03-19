@@ -9,13 +9,14 @@ import json
 
 class Fase(object):
 
-    def __init__(self, fase, master):
+    def __init__(self, fase, master, data):
+        self.data = data
         self.master = master
         self.fase = fase
         self.mapa = []
         self.enemigos = []
-        self.carregar_fase()
         self.porta = []
+        self.carregar_fase()
         self.portal = []
         self.itens = []
         self.labels = []
@@ -25,7 +26,13 @@ class Fase(object):
 
     def getItem(self, item):
         self.itens.append(item.copy())
-        print(f"Itens: {self.itens}")
+
+    def getItens(self):
+        cont = 0
+        for item in self.itens:
+            if item in self.player.itens:
+                self.master.retirar_item(cont)
+            cont+=1
 
     def pegar_objs_sp(self):
         for cont, linha in enumerate(self.mapa):
@@ -40,8 +47,7 @@ class Fase(object):
                 elif coluna == 4:
                     self.portal.append(cont)
                     self.portal.append(cont2)
-
-
+        
     
     def parar(self):
         self.parar_loop = True
@@ -65,7 +71,14 @@ class Fase(object):
         
 
     def criar_player(self, dados: dict):
-        self.player = Player(dados["nome"], dados["velocidade"], dados["posy"], dados["posx"])
+        if self.data:
+            self.player = Player(dados["nome"], dados["velocidade"], self.data["posy"], self.data["posx"])
+            self.player.vidas = self.data['vidas']
+            self.player.itens = self.data['itens']
+            
+        else:
+            self.player = Player(dados["nome"], dados["velocidade"], dados["posy"], dados["posx"])
+        
 
     def criar_enemigos(self, *enemigos):
         for enemigo in enemigos[0]:
@@ -163,3 +176,20 @@ class Fase(object):
             
         except FileNotFoundError:
             print("Caminho nao encontrado")
+   
+    def salvar_jogo(self):
+        
+        info = {
+            "fase_atual": self.master.mapa_atual,
+            "posx": self.player.posx,
+            "posy": self.player.posy,
+            "vidas": self.player.vidas,
+            "itens": self.player.itens.copy()
+        }
+        try:
+            with open('save/save.json', 'w') as arq:
+                json.dump(info, arq, indent=4)
+                arq.close()
+            return True
+        except:
+            return False

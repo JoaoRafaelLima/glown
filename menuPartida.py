@@ -45,7 +45,8 @@ class MenuPartida(Frame):
             bg=CORES['bg'],
             activebackground= CORES['bg'],
             fg=CORES['texto'],
-            activeforeground= CORES['texto']
+            activeforeground= CORES['texto'],
+            command=self.salvar_jogo
         )
         self.bt3 = Button(
             self,
@@ -78,5 +79,12 @@ class MenuPartida(Frame):
             self.place(x=x, y=y)
             MenuPartida.atvio = True
 
-
+    def salvar_jogo(self):
+        resp = self.master.fase.salvar_jogo()
+        if resp:
+            self.place_forget()
+            print("salvo com sucesso !!")
+        else:
+            print("error")
+        
 

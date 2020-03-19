@@ -66,7 +66,11 @@ class popUp(Frame):
         else:
             print("ja tem um popUp fixado!!!") 
     def voltar_menu(self):
+        self.place_forget()
         self.master.iniciar_menu(1)
+        popUp.ativo = False
+        self.master.status = 'jogando'
+        self.master.mapa_atual = 0
 
     def sair(self):
         self.place_forget()
