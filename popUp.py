@@ -8,9 +8,6 @@ class popUp(Frame):
         #variaveis
         self.status = status
         self.master = master
-        #fonts
-        self.font1 = ('Arial bold', 14)
-        self.font2 = ('Arial', 12)
         #propriedades
         self['width'] = 300
         self['height'] = 150
@@ -64,11 +61,10 @@ class popUp(Frame):
                 self.botao_op2.place(x=170,y=100 )
             popUp.ativo = True
         else:
-            print("ja tem um popUp fixado!!!") 
-    def voltar_menu(self):
-        self.place_forget()
-        popUp.ativo = False
+            pass
 
+    def voltar_menu(self):
+        self.default()
         self.master.iniciar_menu(1)
         self.master.status = 'jogando'
         self.master.mapa_atual = 0
