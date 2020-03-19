@@ -13,7 +13,7 @@ def colidir(master, player, enemigo):
     else:
         master.fase.parar_loop = True
         master.status = "perdeu"
-        master.ativar_poUp("event")
+        master.ativar_popUp("event")
         
 def verificar(master, obj, fase):
     if obj.vidas == 0:

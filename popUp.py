@@ -67,27 +67,28 @@ class popUp(Frame):
             print("ja tem um popUp fixado!!!") 
     def voltar_menu(self):
         self.place_forget()
-        self.master.iniciar_menu(1)
         popUp.ativo = False
+
+        self.master.iniciar_menu(1)
         self.master.status = 'jogando'
         self.master.mapa_atual = 0
 
     def sair(self):
-        self.place_forget()
+        self.default()
         self.master.sair_partida()
-        popUp.ativo = False
     
     def reiniciar_jogo(self):
-        self.place_forget()
+        self.default()
         self.master.sair_partida()
-        popUp.ativo = False
 
     def continuar_jogo(self):
-        self.place_forget()
-        popUp.ativo = False
+        self.default()
     
     def proxima_fase(self):
-        self.place_forget()
+        self.default()
         self.master.proxima_fase()
+    
+    def default(self):
+        self.place_forget()
         popUp.ativo = False
 
